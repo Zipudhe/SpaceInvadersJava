@@ -1,11 +1,27 @@
 package Entity;
 
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+
 public class Ship extends InGameObject {
 
     public String name;
     protected int speed;
     public int damage;
-    private int shotInverval;
+    private final int shotInverval = 50; // tempo em milisegundos
+    private Bullet bullet;    
+    private int time = 0;
+
+    public Ship()  {
+        super(565, 630, 35, 35, 100);
+        this.speed = 5;
+        try {
+            this.setDrawing(ImageIO.read(new File("src/assets/mainShip.png")));
+        } catch(IOException e) {    
+            System.out.println("Image not found in" + this.getClass());
+        }
+    }
 
     public void moveRight() {
         this.posX += this.speed;
@@ -16,28 +32,30 @@ public class Ship extends InGameObject {
     }
 
     public void moveForward() {
-        this.posY =+ this.speed;
+        this.posY -= this.speed;
     }
     
     public void moveBackward() {
-        this.posY -= this.speed;
+        this.posY += this.speed;
     }
 
-    public int getSpeed() {
-        return this.speed;
+    public boolean canShoot() {
+        if(this.time >= this.shotInverval) {
+            this.time = 0;
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public void shoot() {
-        // TODO vincular isso com a entidade de projéteis
-        System.out.println(this.shotInverval);
+    public Bullet shoot() {
+        bullet = new Bullet(this.posX + 3 ,
+                    this.posY - (this.height - 14), 32, 32, 0);
+        return bullet;
     }
-    
 
-    
-    
-    public Ship(int initialPosX, int initialPosY, int width, int height, int initialLife) {
-        super(initialPosX, initialPosY, width, height, initialLife);
-        //TODO Auto-generated constructor stub
+    @Override
+    public void update() {
+        this.time += 1;
     }
-    
 }

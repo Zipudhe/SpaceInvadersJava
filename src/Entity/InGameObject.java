@@ -1,12 +1,19 @@
 package Entity;
 
-public class InGameObject {
+import java.awt.image.BufferedImage;
+import java.awt.Graphics2D;
+
+public class InGameObject implements Update {
     protected int posX;
     protected int posY;
     protected int witdh;
     protected int height;
     public int life;
     public boolean isDestroyed = false;
+
+    public int time = 0;
+
+    private BufferedImage drawing;
 
     public int getPosX() {
         return this.posX;
@@ -40,12 +47,39 @@ public class InGameObject {
         this.life = life;
     }
 
+    public void dealDamage(int damage) {
+        this.life -= damage;
+        if(this.life <= 0) {
+            this.setIsDestroyed(true);
+        }
+    }
+
     public void setIsDestroyed(boolean state) {
         this.isDestroyed = state;
     }
 
     public boolean checkIsDestroyed() {
         return this.isDestroyed;
+    }
+
+    public void setDrawing(BufferedImage image) {
+        this.drawing = image;
+    }
+
+    public void draw(Graphics2D g) {
+        this.time += 1;
+        g.drawImage(
+            drawing, 
+            this.posX, 
+            this.posY, 
+            this.posX + this.witdh, 
+            this.posY + this.height, 
+            0, 
+            0, 
+            drawing.getWidth(), 
+            drawing.getHeight(),
+            null
+            );
     }
 
 
@@ -56,5 +90,10 @@ public class InGameObject {
         this.height = height;
         this.witdh = width;
         this.isDestroyed = false;
+    }
+
+    public void update() {
+        // TODO Auto-generated method stub
+        
     }
 }
