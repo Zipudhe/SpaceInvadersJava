@@ -5,6 +5,7 @@ import Entity.EnemyShip;
 import Entity.Ship;
 
 import javax.imageio.ImageIO;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import java.awt.Graphics;
@@ -29,16 +30,21 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
     private double points;
     private Font gameFont = new Font("Consolas", Font.BOLD, 18);
     private String gameStatus;
-    // private boolean isPaused;
+    private JFrame instanceFrame;
+    private String[] ranking;
+    private File rankingFile;
 
-    public GameScreen() {
+    public GameScreen(JFrame frame, String[] ranking, File rankingFile) {
         this.setBackground(Color.BLACK);
         gameLoop = new Thread(this);
         mainShip = new Ship();
         bullets = new ArrayList<Bullet>();
         enemies = new ArrayList<EnemyShip>();
-        gameStatus = "derrota";
+        this.gameStatus = "none";
         points = 0;
+        this.instanceFrame = frame;
+        this.ranking = ranking;
+        this.rankingFile = rankingFile;
 
         try {
             enemyDrwaing = ImageIO.read(new File("src/assets/enemy1.png"));
@@ -47,9 +53,8 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
         }
         
         gameLoop.start();
-        // isPaused = false;
 
-        for(int i = 0; i < 40; i++) {
+        for(int i = 0; i < 2; i++) {
             int row = i/10;
             // int colmun = i%2;
             enemies.add(new EnemyShip( enemyDrwaing, 100 + (i%10 * 60), 100 + (50 * row), 25, 30, 100));
@@ -76,12 +81,16 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
         mainShip.update();
         for(EnemyShip enemy: enemies) {
             if(enemy.getPosY() >= 720 - 40) {
-                gameStatus = "perdeu";
+                gameStatus = "Perdeu";
             }
 
             enemy.update();
         }
         
+        if(this.points == 20) {
+            gameStatus = "Venceu";
+        }
+
         try {
             for(Bullet bullet: bullets) {
                 bullet.update();
@@ -103,6 +112,14 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
             }
         } catch(Exception e) {
             // Do nothing
+        }
+
+        if(this.gameStatus != "none") {
+
+            FinalScreen finalScreen = new FinalScreen(ranking, this.gameStatus, this.points, rankingFile);
+            this.addKeyListener(finalScreen);
+            instanceFrame.add(finalScreen);
+            this.setVisible(false);
         }
 
     }

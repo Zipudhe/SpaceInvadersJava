@@ -9,7 +9,7 @@ public class Ship extends InGameObject {
     public String name;
     protected int speed;
     public int damage;
-    private final int shotInverval = 50; // tempo em milisegundos
+    private final int shotInverval = 30; // tempo em milisegundos
     private Bullet bullet;    
     private int time = 0;
 
