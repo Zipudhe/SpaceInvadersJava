@@ -1,7 +1,6 @@
 package Screen;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -16,10 +15,6 @@ import java.awt.RenderingHints;
 import java.awt.Font;
 
 
-
-
-
-
 public class FinalScreen extends JPanel implements KeyListener, Runnable {
 
     private String title;
@@ -29,7 +24,7 @@ public class FinalScreen extends JPanel implements KeyListener, Runnable {
     private double currentPoints;
     private File rankingFile;
 
-    FinalScreen(String[] ranking, String title, double finalPoints, File rankingFile) {
+    public FinalScreen(String[] ranking, String title, double finalPoints, File rankingFile) {
         this.setBackground(Color.BLACK);
         this.setVisible(isVisible);
         this.setBounds(0, 0, 1200, 720);
@@ -55,14 +50,17 @@ public class FinalScreen extends JPanel implements KeyListener, Runnable {
 
         String finalMessage = "Você " + this.title + "!";
 
-        graph2D.drawString(finalMessage, 520, 130 );
-        graph2D.drawString("Sua pontuação: " + this.currentPoints, 500, 230 );
+        graph2D.drawString(finalMessage, 530, 90 );
+        graph2D.drawString("Sua pontuação: " + this.currentPoints, 500, 190 );
 
-        graph2D.drawString("Ranking", 550, 290);
+        graph2D.drawString("Ranking", 550, 250);
 
         for(int i = 0; i < ranking.length; i++) {
-            graph2D.drawString("Pontuação: " + ranking[i], 510, 330 + (i * 40));
+            graph2D.drawString("Pontuação: " + ranking[i], 510, 290 + (i * 40));
         }
+
+        graph2D.setColor(Color.YELLOW);
+        graph2D.drawString("Pressione ENTER para voltar ao menu", 420, 145);
 
         updateRanking();
     }
@@ -101,23 +99,21 @@ public class FinalScreen extends JPanel implements KeyListener, Runnable {
         }
 
         try {
-            // FileWriter writeFile = new FileWriter(rankingFile);
+            // Abre o arquivo de ranking e atualiza a pontuação do ranking
             PrintWriter pw = new PrintWriter(rankingFile);
             for(String point: ranking) {
                 pw.println(point);
             }
             pw.close();
-
-            // writeFile.write("10.0");
-            // writeFile.close();
-            System.out.println("Successfully wrote on file");
         } catch(IOException e) {
+            // Lida com erro em caso de não conseguir utilizar o arquivo de ranking
             System.out.print("Failed to write on file");
             e.printStackTrace();
         }
 
     }
 
+    // "Pausa" a atualização de tela por um tempo determinado.
     private void sleep(long sleepTime) {
         try {
             Thread.sleep(sleepTime);
@@ -126,9 +122,10 @@ public class FinalScreen extends JPanel implements KeyListener, Runnable {
         }
     }
 
+
+    // Todos métodos são para detectar eventos no teclado
     @Override
     public void keyPressed(KeyEvent event) {
-        // TODO Auto-generated method stub
         if(event.getKeyCode() == KeyEvent.VK_D) {
             System.out.println("arrow dow");
         }
@@ -140,19 +137,11 @@ public class FinalScreen extends JPanel implements KeyListener, Runnable {
         if(event.getKeyCode() == KeyEvent.VK_ENTER) {
             System.out.println("Enter");
         }
-
     }
 
     @Override
-    public void keyReleased(KeyEvent arg0) {
-        // TODO Auto-generated method stub
-        
-    }
+    public void keyReleased(KeyEvent arg0) {}
 
     @Override
-    public void keyTyped(KeyEvent arg0) {
-        // TODO Auto-generated method stub
-        
-    }
-
+    public void keyTyped(KeyEvent arg0) {}
 }

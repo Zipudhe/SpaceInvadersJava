@@ -123,6 +123,14 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
         }
 
     }
+
+    private void sleep(long sleepTime) {
+        try {
+            Thread.sleep(sleepTime);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
     
     public void paintComponent(Graphics graph) {
         super.paintComponent(graph);
@@ -165,17 +173,10 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 
     }
 
-    private void sleep(long sleepTime) {
-        try {
-            Thread.sleep(sleepTime);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
+
 
     @Override
     public void keyPressed(KeyEvent event) {
-        // if()
 
         if(event.getKeyCode() == KeyEvent.VK_D) {
             mainShip.moveRight();
