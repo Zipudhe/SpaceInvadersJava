@@ -185,14 +185,6 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
         if(event.getKeyCode() == KeyEvent.VK_A) {
             mainShip.moveLeft();
         }   
-
-        if(event.getKeyCode() == KeyEvent.VK_W) {
-            mainShip.moveForward();
-        }
-        
-        if(event.getKeyCode() == KeyEvent.VK_S) {
-            mainShip.moveBackward();
-        }  
     }
 
     @Override
