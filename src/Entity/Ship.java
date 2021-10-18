@@ -31,14 +31,6 @@ public class Ship extends InGameObject {
         this.posX -= this.speed;
     }
 
-    public void moveForward() {
-        this.posY -= this.speed;
-    }
-    
-    public void moveBackward() {
-        this.posY += this.speed;
-    }
-
     public boolean canShoot() {
         if(this.time >= this.shotInverval) {
             this.time = 0;
