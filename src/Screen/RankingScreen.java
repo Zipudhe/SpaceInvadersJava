@@ -90,7 +90,6 @@ public class RankingScreen extends JPanel implements KeyListener, Runnable {
             System.out.println("Pressed Enter");
             frame.remove(this);
             frame.removeKeyListener(this);
-            System.out.println(menu.checkScreen());
         }
     }
 

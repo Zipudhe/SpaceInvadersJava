@@ -2,6 +2,7 @@ package Screen;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
+import javax.swing.text.html.parser.Entity;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -16,6 +17,8 @@ import java.io.File;
 import java.io.IOException;
 
 import java.lang.InterruptedException;
+
+import Handler.GameHandler;
 
 
 public class MenuScreen extends JPanel implements KeyListener, Runnable {
@@ -34,6 +37,8 @@ public class MenuScreen extends JPanel implements KeyListener, Runnable {
     private String nextScreen;
     private Boolean isRunning = true;
 
+    GameHandler handler;
+
     public MenuScreen(String[] ranking) {
         this.ranking = ranking;
         this.setBackground(Color.BLACK);
@@ -41,7 +46,6 @@ public class MenuScreen extends JPanel implements KeyListener, Runnable {
         this.setBounds(0, 0, 1200, 720);        
 
         gameLoop.start();
-
         try {
             arrow = ImageIO.read(new File("src/assets/arrow.png"));
         } catch(IOException e) {
