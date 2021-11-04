@@ -92,8 +92,5 @@ public class InGameObject implements Update {
         this.isDestroyed = false;
     }
 
-    public void update() {
-        // TODO Auto-generated method stub
-        
-    }
+    public void update() {}
 }

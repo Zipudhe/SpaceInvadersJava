@@ -20,27 +20,16 @@ public class EnemyShip extends InGameObject {
         this.posX += this.speed;
     }
 
-    public void moveLeft() {
-        this.posX -= this.speed;
-    }
 
     public void moveForward() {
         this.posY =+ this.speed;
     }
     
-    public void moveBackward() {
-        this.posY -= this.speed;
-    }
 
     public int getSpeed() {
         return this.speed;
     }
 
-    public Bullet shoot() {
-        bullet = new Bullet(this.posX + 3 ,
-                    this.posY - (this.height - 14), 32, 32, 0);
-        return bullet;
-    }
     
     @Override
     public void update() {

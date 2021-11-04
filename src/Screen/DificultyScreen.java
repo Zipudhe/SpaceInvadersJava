@@ -1,6 +1,7 @@
 package Screen;
 
 import javax.imageio.ImageIO;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import java.awt.event.KeyEvent;
@@ -15,32 +16,41 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-import java.lang.InterruptedException;
 
+public class DificultyScreen extends JPanel implements KeyListener, Runnable {
 
-public class MenuScreen extends JPanel implements KeyListener, Runnable {
-    private String title = "SPACE INVADERS";
-    private String subtitle = "By Lucas Gonçalves Ramalho";
-    private String[] ranking;
-    private Thread gameLoop;
-
+    private String title = "Dificuldade";
     private Font titleFont = new Font("Consolas", Font.BOLD, 32);
-    private Font subtitleFont = new Font("Consolas", Font.BOLD, 12);
     private Font gameFont = new Font("Consolas", Font.BOLD, 18);
+
+    private Thread gameLoop;
 
     private BufferedImage arrow;
     private int arrowPos = 300;
 
-    private String nextScreen;
-    private Boolean isRunning = true;
+    private String nextScreen = "Menu";
 
-    public MenuScreen(String[] ranking) {
-        this.ranking = ranking;
+    private JFrame frame;
+    private MenuScreen menu;
+    private GameScreen game;
+
+    private boolean isVisible = true;
+
+    static String dificulty;
+
+
+    public DificultyScreen(JFrame frame, MenuScreen menu, GameScreen game, String dificulty) {
+
+        this.frame = frame;
+        this.menu = menu;
+        this.game = game;
         this.setBackground(Color.BLACK);
-        gameLoop = new Thread(this);
-        this.setBounds(0, 0, 1200, 720);        
+        this.setBounds(0, 0, 1200, 720);
+        this.setVisible(isVisible);
 
-        gameLoop.start();
+        DificultyScreen.dificulty = dificulty;
+
+        gameLoop = new Thread(this);
 
         try {
             arrow = ImageIO.read(new File("src/assets/arrow.png"));
@@ -48,11 +58,22 @@ public class MenuScreen extends JPanel implements KeyListener, Runnable {
             System.out.println("Failed to load image");
         }
 
+        gameLoop.start();
     }
-    
+
+    public void update(){}
+
+    private void sleep(long sleepTime) {
+        try {
+            Thread.sleep(sleepTime);
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Thread interrupted..."+e);  
+        }
+    }
+
     @Override
     public void run() {
-        while(isRunning) {
+        while(true) {
             long startTime = System.currentTimeMillis();
             update();
             repaint();
@@ -66,24 +87,6 @@ public class MenuScreen extends JPanel implements KeyListener, Runnable {
         }
     }
 
-    public void update() {
-        if(!isRunning) {
-            try {
-                this.gameLoop.wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void sleep(long sleepTime) {
-        try {
-            Thread.sleep(sleepTime);
-        } catch (InterruptedException e) {
-            throw new RuntimeException("Thread interrupted..."+e);  
-        }
-    }
-
     public void paintComponent(Graphics graph) {
         super.paintComponent(graph);
         Graphics2D graph2D = (Graphics2D) graph.create();
@@ -94,13 +97,11 @@ public class MenuScreen extends JPanel implements KeyListener, Runnable {
         graph2D.setFont(titleFont);
         graph2D.drawString(title, 460, 130);
         
-        graph2D.setFont(subtitleFont);
-        graph2D.drawString(subtitle, 500, 150);
         
         graph2D.setFont(gameFont);
-        graph2D.drawString("Começar", 520, 320);
-        graph2D.drawString("Dificuldade", 520, 360);
-        graph2D.drawString("Ranking", 520, 400);
+        graph2D.drawString("Fácil", 520, 320);
+        graph2D.drawString("Médio", 520, 360);
+        graph2D.drawString("Difícil", 520, 400);
         
         this.draw(graph2D);
     }
@@ -120,9 +121,27 @@ public class MenuScreen extends JPanel implements KeyListener, Runnable {
             );
     }
 
+
     @Override
     public void keyPressed(KeyEvent event) {
-        // Lida com a posição da imagem do arrow
+        if(event.getKeyCode() == KeyEvent.VK_ENTER) {
+            if(arrowPos == 300) {
+                DificultyScreen.dificulty = "Facil";
+            }
+
+            if(arrowPos == 340) {
+                DificultyScreen.dificulty = "Medio";
+            }
+
+            if(arrowPos == 380) {
+                DificultyScreen.dificulty = "Dificil";
+            }
+
+            frame.remove(this);
+            frame.removeKeyListener(this);
+            menu.setScreen("Menu");
+        }
+
         if(event.getKeyCode() == KeyEvent.VK_UP) {
             if(arrowPos > 301) {
                 arrowPos -= 40;
@@ -135,39 +154,19 @@ public class MenuScreen extends JPanel implements KeyListener, Runnable {
             }
         }
 
-        if(event.getKeyCode() == KeyEvent.VK_ENTER) {
-            if(arrowPos == 300) {
-                this.nextScreen = "Comecar";
-            }
 
-            if(arrowPos == 340) {
-                this.nextScreen = "Dificuldade";
-            }
-
-            if(arrowPos == 380) {
-                this.nextScreen = "Ranking";
-            }
-        }
     }
+
     @Override
-    public void keyReleased(KeyEvent arg0) {}
+    public void keyReleased(KeyEvent arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void keyTyped(KeyEvent arg0) {
+        // TODO Auto-generated method stub
+        
+    }
     
-    @Override
-    public void keyTyped(KeyEvent arg0) {}
-
-    public String checkScreen() {
-        return this.nextScreen;
-    }
-
-    public void setScreen(String screen) {
-        this.nextScreen = screen;
-    }
-
-    public void stopThread() {
-        this.isRunning = false;
-    }
-
-    public void startThread() {
-        this.isRunning = true;
-    }
 }

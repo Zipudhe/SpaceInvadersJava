@@ -34,8 +34,13 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
     private String[] ranking;
     private File rankingFile;
 
-    public GameScreen(JFrame frame, String[] ranking, File rankingFile) {
+    private int qtdEnemies;
+
+    private Boolean isRunning = true;
+
+    public GameScreen(JFrame frame, String[] ranking, File rankingFile, String dificulty) {
         this.setBackground(Color.BLACK);
+        this.setBounds(0, 0, 1200, 720);
         gameLoop = new Thread(this);
         mainShip = new Ship();
         bullets = new ArrayList<Bullet>();
@@ -46,6 +51,16 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
         this.ranking = ranking;
         this.rankingFile = rankingFile;
 
+        if(dificulty == "Facil") {
+            qtdEnemies = 20;
+        } else if(dificulty == "Medio") {
+            qtdEnemies = 40;
+        } else {
+            qtdEnemies = 60;
+        }
+
+        
+
         try {
             enemyDrwaing = ImageIO.read(new File("src/assets/enemy1.png"));
         } catch(IOException e ) {
@@ -54,7 +69,7 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
         
         gameLoop.start();
 
-        for(int i = 0; i < 2; i++) {
+        for(int i = 0; i < qtdEnemies; i++) {
             int row = i/10;
             // int colmun = i%2;
             enemies.add(new EnemyShip( enemyDrwaing, 100 + (i%10 * 60), 100 + (50 * row), 25, 30, 100));
@@ -63,7 +78,7 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 
     @Override
     public void run() {
-        while(true) {
+        while(isRunning) {
             long startTime = System.currentTimeMillis();
             update();
             repaint();
@@ -87,7 +102,7 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
             enemy.update();
         }
         
-        if(this.points == 20) {
+        if(this.points == qtdEnemies * 10) {
             gameStatus = "Venceu";
         }
 
@@ -174,7 +189,6 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
     }
 
 
-
     @Override
     public void keyPressed(KeyEvent event) {
 
@@ -194,6 +208,5 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
     @Override
     public void keyTyped(KeyEvent event) {
     }
-
 }
 
